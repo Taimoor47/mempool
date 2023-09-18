@@ -1,3 +1,7 @@
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000; // Set your desired port
+
 const ethers = require("ethers");
 const axios = require("axios");
 const dotenv = require("dotenv");
@@ -368,3 +372,14 @@ function saveDataToCSV(pairAddress, data) {
 }
 
 main();
+
+
+// API endpoint to trigger your script
+app.get('/run', (req, res) => {
+  main(); // Call your main function when the endpoint is accessed
+  res.send('Script is running...');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
