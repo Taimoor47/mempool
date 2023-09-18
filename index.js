@@ -1,7 +1,3 @@
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000; // Set your desired port
-
 const ethers = require("ethers");
 const axios = require("axios");
 const dotenv = require("dotenv");
@@ -46,9 +42,9 @@ const targetTopic0 = [
 const tokenAddresses = [
   // "0x85c920a41dd7de0d5bc0f3d6c03241bac9aef0f1",
   "0x20A8BB8F14F14E4F5914C9ffE475C3180db1e089",
-  // "0xaf5191b0de278c7286d6c7cc6ab6bb8a73ba2cd6",
-  // "0x514910771af9ca656af840dff83e8264ecf986ca",
-  // "0x94Be6962be41377d5BedA8dFe1b100F3BF0eaCf3",
+  "0xaf5191b0de278c7286d6c7cc6ab6bb8a73ba2cd6",
+  "0x514910771af9ca656af840dff83e8264ecf986ca",
+  "0x94Be6962be41377d5BedA8dFe1b100F3BF0eaCf3",
   // "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
 ];
 
@@ -372,14 +368,3 @@ function saveDataToCSV(pairAddress, data) {
 }
 
 main();
-
-
-// API endpoint to trigger your script
-app.get('/run', (req, res) => {
-  main(); // Call your main function when the endpoint is accessed
-  res.send('Script is running...');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
