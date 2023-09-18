@@ -1,0 +1,306 @@
+[
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amountIn",
+          "type": "uint256"
+        },
+        {
+          "name": "amountOutMin",
+          "type": "uint256"
+        },
+        {
+          "name": "path",
+          "type": "address[]"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapExactTokensForTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amountIn",
+          "type": "uint256"
+        },
+        {
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "name": "path",
+          "type": "address[]"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapTokensForExactTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amountOutMin",
+          "type": "uint256"
+        },
+        {
+          "name": "path",
+          "type": "address[]"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapExactETHForTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amountOutMin",
+          "type": "uint256"
+        },
+        {
+          "name": "path",
+          "type": "address[]"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapExactETHForTokensSupportingFeeOnTransferTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "amountIn",
+          "type": "uint256"
+        },
+        {
+          "name": "amountOutMin",
+          "type": "uint256"
+        },
+        {
+          "name": "path",
+          "type": "address[]"
+        },
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapExactTokensForETHSupportingFeeOnTransferTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+ 
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "commands",
+            "type": "bytes"
+          },
+          {
+            "name": "inputs",
+            "type": "bytes[]"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "name": "execute",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "permit2",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "weth9",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "seaportV1_5",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "seaportV1_4",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "openseaConduit",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "nftxZap",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "x2y2",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "foundation",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "sudoswap",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "elementMarket",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "nft20Zap",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "cryptopunks",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "looksRareV2",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "routerRewardsDistributor",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "looksRareRewardsDistributor",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "looksRareToken",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "v2Factory",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "v3Factory",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "pairInitCodeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "poolInitCodeHash",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct RouterParameters",
+            "name": "params",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "stateMutability": "payable",
+        "type": "receive"
+      }
+    
+    
+  ]
+  
