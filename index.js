@@ -7,9 +7,9 @@ const fs = require("fs");
 dotenv.config();
 // d56ee36b62fc46cbad3781027cb5cdcb
 // // Otherwise use Alchemy, Infura, QuickNode etc
-const wssUrl = "wss://mainnet.infura.io/ws/v3/d2ee43d9b13044b2b37a006cc01f0b9d";
+const wssUrl = "wss://mainnet.infura.io/ws/v3/cc04f48328b048fcb347131ee086b179";
 const httpUrl =
-  "https://mainnet.infura.io/ws/v3/d2ee43d9b13044b2b37a006cc01f0b9d";
+  "https://mainnet.infura.io/ws/v3/cc04f48328b048fcb347131ee086b179";
 let web3 = new Web3(httpUrl);
 // Http Provider
 const httpProviderUrl = process.env.PROVIDER_HTTP;
@@ -42,9 +42,9 @@ const targetTopic0 = [
 const tokenAddresses = [
   // "0x85c920a41dd7de0d5bc0f3d6c03241bac9aef0f1",
   "0x20A8BB8F14F14E4F5914C9ffE475C3180db1e089",
-  "0xaf5191b0de278c7286d6c7cc6ab6bb8a73ba2cd6",
-  "0x514910771af9ca656af840dff83e8264ecf986ca",
-  "0x94Be6962be41377d5BedA8dFe1b100F3BF0eaCf3",
+  "0x94be6962be41377d5beda8dfe1b100f3bf0eacf3",
+  // "0x514910771af9ca656af840dff83e8264ecf986ca",
+  // "0x94Be6962be41377d5BedA8dFe1b100F3BF0eaCf3",
   // "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
 ];
 
@@ -73,7 +73,6 @@ const main = async () => {
     }
   });
 };
-
 // Function to process a single transaction
 async function processTransaction(txHash) {
   try {
@@ -105,122 +104,131 @@ async function confirmEtherTransaction(txHash) {
       if (receipt.status) {
         // To chcek address in every log
         for (const log of receipt.logs) {
-          if(log.topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"){
-          if (processedTopic.has(txHash)) {
-            console.log("TERMINATED MAIN LOOP");
-            break;
-          }
-          // to check token addres machting with log address
-          for (const token of tokenAddresses) {
-            if (log.address.toLowerCase() === token.toLowerCase()) {
-              if (processedTopic.has(txHash)) {
-                console.log("TERMINATED TOKEN LOOP");
-                break;
-              }
-              // const contract = new ethers.Contract(
-              //   token,
-              //   abiERC20,
-              //   providerWSS
-              // );
-              // const = await contract.);
-              // checking topic of every log
-              try {
-                for (const topicLog of receipt.logs) {
-                  if (targetTopic0.includes(topicLog.topics[0])) {
-                    if (processedTopic.has(txHash)) {
-                      console.log("TERMINATED TOKEN LOOP");
-                      break;
-                    }
-
-
-                    const block = await providerWSS.getBlock(receipt.blockNumber);
-                    const lg = decodeAddress(topicLog.topics);
-                    const matches = lg.filter((address) =>
-                      routerAddresses.includes(address)
-                    );
-                    if (matches.length === lg.length) {
-                      let swapData = await tokenETHValueFromSwapLog(
-                        topicLog,
-                        "sell"
-                      );
-  
-                      let price = await fetchPoolData(token, "eth")
-                        .then((data) => {
-                          if (data) {
-                            return data.data[0].attributes.base_token_price_usd;
-                          } else {
-                            console.log("Failed to fetch pool data.");
-                          }
-                        })
-                        .catch((error) => {
-                          console.error("An error occurred:", error);
-                        });
-  
-                      //Finalized Data
-                      let data = {
-                        price: price,
-                        volume: swapData.tokenValue,
-                        timestamp: block.timestamp, // Use block timestamp
-                      };
-                      console.log( "Token Sell Swap Found");
-                      console.log(data);
-                      saveDataToCSV(token, data);
-                      if (processedTopic.size >= 30) {
-                        const oldestTxHash = processedTopic.values().next().value;
-                        processedTopic.delete(oldestTxHash);
-                        console.log("CLEARED Tx HashS");
+          if (
+            log.topics[0] ===
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+          ) {
+            if (processedTopic.has(txHash)) {
+              console.log("TERMINATED MAIN LOOP");
+              break;
+            }
+            // to check token addres machting with log address
+            for (const token of tokenAddresses) {
+              if (log.address.toLowerCase() === token.toLowerCase()) {
+                if (processedTopic.has(txHash)) {
+                  console.log("TERMINATED TOKEN LOOP");
+                  break;
+                }
+                // const contract = new ethers.Contract(
+                //   token,
+                //   abiERC20,
+                //   providerWSS
+                // );
+                // const = await contract.);
+                // checking topic of every log
+                try {
+                  for (const topicLog of receipt.logs) {
+                    if (targetTopic0.includes(topicLog.topics[0])) {
+                      if (processedTopic.has(txHash)) {
+                        console.log("TERMINATED TOKEN LOOP");
+                        break;
                       }
-                      processedTopic.add(txHash);
-                      return;
-                    } else if (matches.length > 0) {
-                      console.log( "Buy Swap Found");
-  
-                      let swapData = await tokenETHValueFromSwapLog(
-                        topicLog,
-                        "buy"
+
+                      const block = await providerWSS.getBlock(
+                        receipt.blockNumber
                       );
-                      // Get Token Price
-                      let price = await fetchPoolData(token, "eth")
-                        .then((data) => {
-                          if (data) {
-                            return data.data[0].attributes.base_token_price_usd;
-                          } else {
-                            console.log("Failed to fetch pool data.");
-                          }
-                        })
-                        .catch((error) => {
-                          console.error("An error occurred:", error);
-                        });
-  
-                      //Finalized Data
-                      let data = {
-                        price: price,
-                        volume: swapData.tokenValue,
-                        timestamp: block.timestamp, // Use block timestamp
-                      };
-                      console.log(data);
-                      saveDataToCSV(token, data);
-                      if (processedTopic.size >= 30) {
-                        const oldestTxHash = processedTopic.values().next().value;
-                        processedTopic.delete(oldestTxHash);
-                        console.log("CLEARED Tx HashS");
+                      const lg = decodeAddress(topicLog.topics);
+                      const matches = lg.filter((address) =>
+                        routerAddresses.includes(address)
+                      );
+                      if (matches.length === lg.length) {
+                        let swapData =
+                          topicLog.topics[0] ===
+                          "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
+                            ? await decodeV3SwapDataHex(topicLog.data)
+                            : await decodeV2SwapDataHex(topicLog.data);
+
+                        let price = await fetchPoolData(token, "eth")
+                          .then((data) => {
+                            if (data) {
+                              return data.data[0].attributes
+                                .base_token_price_usd;
+                            } else {
+                              console.log("Failed to fetch pool data.");
+                            }
+                          })
+                          .catch((error) => {
+                            console.error("An error occurred:", error);
+                          });
+
+                        //Finalized Data
+                        let data = {
+                          price: price,
+                          volume: swapData.tokenValue,
+                          timestamp: block.timestamp, // Use block timestamp
+                        };
+                        console.log("Token Sell Swap Found");
+                        console.log(data);
+                        saveDataToCSV(token, data);
+                        if (processedTopic.size >= 30) {
+                          const oldestTxHash = processedTopic
+                            .values()
+                            .next().value;
+                          processedTopic.delete(oldestTxHash);
+                          console.log("CLEARED Tx HashS");
+                        }
+                        processedTopic.add(txHash);
+                        break;
+                      } else if (matches.length > 0) {
+                        console.log("Buy Swap Found");
+
+                        let swapData =
+                          topicLog.topics[0] ===
+                          "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
+                            ? await decodeV3SwapDataHex(topicLog.data)
+                            : await decodeV2SwapDataHex(topicLog.data);
+                        // Get Token Price
+                        let price = await fetchPoolData(token, "eth")
+                          .then((data) => {
+                            if (data) {
+                              return data.data[0].attributes
+                                .base_token_price_usd;
+                            } else {
+                              console.log("Failed to fetch pool data.");
+                            }
+                          })
+                          .catch((error) => {
+                            console.error("An error occurred:", error);
+                          });
+
+                        //Finalized Data
+                        let data = {
+                          price: price,
+                          volume: swapData.tokenValue,
+                          timestamp: block.timestamp, // Use block timestamp
+                        };
+                        console.log(data);
+                        saveDataToCSV(token, data);
+                        if (processedTopic.size >= 30) {
+                          const oldestTxHash = processedTopic
+                            .values()
+                            .next().value;
+                          processedTopic.delete(oldestTxHash);
+                          console.log("CLEARED Tx HashS");
+                        }
+                        processedTopic.add(txHash);
+                        break;
                       }
-                      processedTopic.add(txHash);
-                      return;
                     }
                   }
+                  clearInterval(confirmationChecker);
+                } catch (error) {
+                  console.log("here", error);
                 }
-                clearInterval(confirmationChecker);
-              } catch (error) {
-                console.log("here", error);
               }
-              
             }
-            
-         
-          }}
+          }
         }
-
 
         // Stop the confirmation checker
         clearInterval(confirmationChecker);
@@ -252,9 +260,7 @@ function decodeAddress(hexRepresentations) {
   } catch (error) {
     console.error("Error decoding address:", error);
   }
- 
 }
-
 
 async function fetchPoolData(tokenAddress, network) {
   const apiUrl = `https://api.geckoterminal.com/api/v2/search/pools?query=${tokenAddress}&network=${network}`;
@@ -275,76 +281,65 @@ async function fetchPoolData(tokenAddress, network) {
   }
 }
 
-async function tokenETHValueFromSwapLog(log, tradeType) {
-  try {
-    if (
-      log.topics[0] ===
-      "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
-    ) {
-      const decodedVersion = web3.eth.abi.decodeParameters(
-        [
-          { type: "int256", name: "amount0" },
-          { type: "int256", name: "amount1" },
-          { type: "uint160", name: "sqrtPriceX96" },
-          { type: "uint128", name: "liquidity" },
-          { type: "int24", name: "tick" },
-        ],
-        log.data
-      );
-      if (decodedVersion.amount0 < 0) {
-        decodedVersion.amount0 = decodedVersion.amount0 * -1;
-        decodedVersion.amount1 = decodedVersion.amount1 / 10 ** 18;
-      } else {
-        decodedVersion.amount0 = decodedVersion.amount0;
-        decodedVersion.amount1 = (decodedVersion.amount1 * -1) / 10 ** 18;
-      }
+async function decodeV3SwapDataHex(hex) {
+  const decodedVersion = web3.eth.abi.decodeParameters(
+    [
+      { type: "int256", name: "amount0" },
+      { type: "int256", name: "amount1" },
+      { type: "uint160", name: "sqrtPriceX96" },
+      { type: "uint128", name: "liquidity" },
+      { type: "int24", name: "tick" },
+    ],
+    hex
+  );
 
-      // console.log(decodedVersion);
+  // console.log("Checker V3 swap hex: ", decodedVersion);
 
-      if (tradeType === "sell")
-        return {
-          ethValue: decodedVersion.amount0,
-          tokenValue: decodedVersion.amount1,
-        };
-      else
-        return {
-          ethValue: decodedVersion.amount1,
-          tokenValue: decodedVersion.amount0,
-        };
-    } else {
-      const decodedVersion = web3.eth.abi.decodeParameters(
-        [
-          { type: "uint256", name: "amount0In" },
-          { type: "uint256", name: "amount1In" },
-          { type: "uint256", name: "amount0Out" },
-          { type: "uint256", name: "amount1Out" },
-        ],
-        log.data
-      );
-      // console.log(decodedVersion);
+  // return decodedVersion;
 
-      if (tradeType === "sell") {
-        decodedVersion.amount1Out = decodedVersion.amount1Out / 1e18;
-        decodedVersion.amount0In = decodedVersion.amount0In;
-        return {
-          ethValue: decodedVersion.amount1Out,
-          tokenValue: decodedVersion.amount0In,
-        };
-      } else {
-        decodedVersion.amount1In = decodedVersion.amount1In / 10 ** 18;
-        decodedVersion.amount0Out = decodedVersion.amount0Out;
-        return {
-          ethValue: decodedVersion.amount1In,
-          tokenValue: decodedVersion.amount0Out,
-        };
-      }
-    }
-  } catch (error) {
-    console.error("Error decoding ABI data:", error);
-    // Handle the error appropriately, e.g., return an error object or rethrow the error.
+  if (decodedVersion.amount0 > 0) {
+    return {
+      amount0: decodedVersion.amount0,
+      amount1: decodedVersion.amount1.replace("-", ""),
+      negativeValue: decodedVersion.amount1.replace("-", ""),
+    };
+  } else {
+    return {
+      amount0: decodedVersion.amount0.replace("-", ""),
+      amount1: decodedVersion.amount1,
+      negativeValue: decodedVersion.amount0.replace("-", ""),
+    };
   }
 }
 
+async function decodeV2SwapDataHex(log) {
+  const decodedVersion = web3.eth.abi.decodeParameters(
+    [
+      { type: "uint256", name: "amount0In" },
+      { type: "uint256", name: "amount1In" },
+      { type: "uint256", name: "amount0Out" },
+      { type: "uint256", name: "amount1Out" },
+    ],
+    log.data
+  );
+  // console.log(decodedVersion, decimals);
+
+  // return decodedVersion;
+
+  if (decodedVersion.amount0Out > 0) {
+    return {
+      amount0: decodedVersion.amount1In,
+      amount1: decodedVersion.amount0Out,
+      swapLog: log,
+    };
+  } else {
+    return {
+      amount0: decodedVersion.amount0In,
+      amount1: decodedVersion.amount1Out,
+      swapLog: log,
+    };
+  }
+}
 
 function saveDataToCSV(pairAddress, data) {
   // Create or append to the CSV file

@@ -2,7 +2,7 @@ const fs = require("fs");
 const readline = require("readline");
 
 // Input CSV file path
-const inputFile = "./swap_data_0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.csv";
+const inputFile = "./swap_data_0x94Be6962be41377d5BedA8dFe1b100F3BF0eaCf3.csv";
 
 // Output JSON file path
 const outputFile = "output.json";
